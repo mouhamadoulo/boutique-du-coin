@@ -1,3 +1,5 @@
+![tests](https://github.com/mouhamadoulo/boutique-du-coin/actions/workflows/garde.yml/badge.svg)
+
 # La Boutique du Coin · en ligne
 
 Le logiciel de caisse de la Boutique du Coin (articles, frais de port, fidélité, stock, clients), assaini lors de la grande revue du J8 : les règles métier sont dans l'en-tête de `boutique.py`, la loi de revue dans `CONVENTIONS.md`, et chaque bug corrigé a laissé son test dans `test_boutique.py`.
