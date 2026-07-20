@@ -1,0 +1,30 @@
+# ================================================================
+#  LA GARDE · le premier robot de la boutique
+#  Fiche de poste : a chaque push et sur chaque Pull Request,
+#  louer une machine chez GitHub et lancer les tests.
+#  A placer dans le repo : .github/workflows/garde.yml
+# ================================================================
+
+name: garde
+
+# Le declencheur : QUAND ce robot se reveille.
+on: [push, pull_request]
+
+# Le poste de travail : ce que le robot fait, etape par etape.
+jobs:
+  tests:
+    runs-on: ubuntu-latest              # la machine louee par GitHub (Linux)
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4       # il clone le repo sur sa machine
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installer pytest
+        run: pip install pytest
+
+      - name: Lancer les tests
+        run: python -m pytest -v        # rouge si UN test echoue
