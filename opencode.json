@@ -1,0 +1,16 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "google/gemini-flash-latest",
+  "provider": {
+    "google": {
+      "options": {
+        "apiKey": "{env:GEMINI_API_KEY}"
+      },
+      "models": {
+        "gemini-flash-latest": {
+          "name": "Gemini Flash (formation)"
+        }
+      }
+    }
+  }
+}
