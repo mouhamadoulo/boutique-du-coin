@@ -9,6 +9,7 @@ Regles metier (affichees sur le site) :
 
 FRAIS_DE_PORT = 4.90
 PLAFOND_REMISE = 0.20  # 20 % maximum, regle du site
+TAUX_ANNIVERSAIRE = 0.10  # petit geste le jour J (PixelForge)
 
 
 def total_articles(panier):
@@ -32,8 +33,15 @@ def remise_fidelite(total, points):
     return total * taux
 
 
-def total_commande(panier, points=0):
-    """Montant final : articles - remise fidelite + frais de port."""
+def remise_anniversaire(total, anniversaire):
+    # NOUVEAU (PixelForge) : 10 % de plus le jour de l'anniversaire du client
+    if anniversaire:
+        return total * TAUX_ANNIVERSAIRE
+    return 0.0
+
+
+def total_commande(panier, points=0, anniversaire=False):
+    """Montant final : articles - remises + frais de port."""
     t = total_articles(panier)
-    r = remise_fidelite(t, points)
+    r = remise_fidelite(t, points) + remise_anniversaire(t, anniversaire)
     return t - r + frais_de_port(t)
