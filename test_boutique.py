@@ -28,9 +28,9 @@ def test_remise_10_points():
     assert remise_fidelite(100.0, 10) == 10.0
 
 
-def test_remise_plafonnee_a_20_pour_cent():
-    # le bug des 150 points, corrige au J8 : jamais plus de 20 %
-    assert remise_fidelite(100.0, 150) == 20.0
+def test_remise_plafonnee_a_30_pour_cent():
+    # plafond remonte a 30 % par la nouvelle politique marketing (PixelForge)
+    assert remise_fidelite(100.0, 150) == 30.0
 
 
 def test_commande_simple():
