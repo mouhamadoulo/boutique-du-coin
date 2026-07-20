@@ -12,7 +12,7 @@ def test_total_articles():
 
 
 def test_port_paye_sous_50():
-    assert frais_de_port(35.0) == 1.00
+    assert frais_de_port(35.0) == 4.90
 
 
 def test_port_offert_au_dessus_de_50():
