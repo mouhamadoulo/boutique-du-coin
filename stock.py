@@ -10,14 +10,24 @@ stock = {
 }
 
 
+def _verifier_quantite(quantite):
+    """Une quantite doit etre un entier strictement positif."""
+    if quantite <= 0:
+        raise ValueError("quantite invalide")
+
+
 def disponible(article):
+    """Nombre d'exemplaires en rayon pour cet article (0 si inconnu)."""
     return stock.get(article, 0)
 
 
 def retirer(article, quantite):
-    """Retire des articles du stock apres une vente (verifications ajoutees au J8)."""
-    if quantite <= 0:
-        raise ValueError("quantite invalide")
+    """Retire des articles du stock apres une vente.
+
+    Refuse la vente si le stock ne suffit pas : le rayon ne peut
+    jamais passer en negatif (regle metier, verifiee par les tests).
+    """
+    _verifier_quantite(quantite)
     if quantite > disponible(article):
         raise ValueError("stock insuffisant pour " + article)
     stock[article] = stock[article] - quantite
@@ -25,7 +35,7 @@ def retirer(article, quantite):
 
 
 def reapprovisionner(article, quantite):
-    if quantite <= 0:
-        raise ValueError("quantite invalide")
+    """Ajoute des articles au stock a la reception d'une livraison."""
+    _verifier_quantite(quantite)
     stock[article] = stock.get(article, 0) + quantite
     return stock[article]
