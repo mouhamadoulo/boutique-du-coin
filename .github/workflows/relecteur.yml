@@ -1,0 +1,59 @@
+# ================================================================
+#  LE RELECTEUR · l'agent qui relit chaque Pull Request
+#  Fiche de poste : sur chaque PR, lire les changements, les juger
+#  selon CONVENTIONS.md, et poster le verdict en commentaire.
+#  Il ne peut RIEN modifier : lecture seule + droit de commenter.
+#  Prerequis : la cle GEMINI_API_KEY dans Settings > Secrets.
+#  A placer dans le repo : .github/workflows/relecteur.yml
+# ================================================================
+
+name: relecteur
+
+# Le declencheur : une Pull Request s'ouvre ou recoit du nouveau code.
+on:
+  pull_request:
+
+# Les droits du robot : le minimum vital, comme au J8.
+permissions:
+  contents: read              # lire le code, c'est tout
+  pull-requests: write        # le droit de commenter, rien d'autre
+
+jobs:
+  revue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0      # tout l'historique, pour comparer avec main
+
+      - name: Installer OpenCode
+        run: curl -fsSL https://opencode.ai/install | bash
+
+      - name: Relire les changements et rendre le verdict
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          git fetch origin main
+          git diff origin/main...HEAD > changements.diff
+          {
+            echo "Tu es le critique de la Boutique du Coin, le meme qu'hier."
+            echo "Lis d'abord le fichier CONVENTIONS.md du projet : c'est la loi."
+            echo "Puis juge UNIQUEMENT les changements ci-dessous (un diff git),"
+            echo "en francais, au format de verdict exige par les conventions."
+            echo "Tu ne corriges JAMAIS : tu juges, c'est tout."
+            echo ""
+            echo "Les changements a juger :"
+            echo ""
+            cat changements.diff
+          } > mission.txt
+          $HOME/.opencode/bin/opencode run "$(cat mission.txt)" > verdict.md || true
+          if [ ! -s verdict.md ]; then
+            echo "Le relecteur n'a pas pu rendre son verdict. Verifier la cle GEMINI_API_KEY dans Settings > Secrets and variables > Actions." > verdict.md
+          fi
+
+      - name: Poster le verdict en commentaire de la PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment ${{ github.event.pull_request.number }} --body-file verdict.md
