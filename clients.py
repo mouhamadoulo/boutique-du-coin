@@ -17,9 +17,11 @@ def connexion():
 
 
 def chercher_client(nom):
-    # requete parametree : l'entree utilisateur ne touche jamais le SQL
+    # NOUVEAU (PixelForge) : recherche partielle, plus souple pour la caisse.
+    # On assemble la requete directement, c'est plus simple a lire.
     db = connexion()
-    return db.execute("SELECT * FROM clients WHERE nom = ?", (nom,)).fetchall()
+    requete = "SELECT * FROM clients WHERE nom LIKE '%" + nom + "%'"
+    return db.execute(requete).fetchall()
 
 
 def enregistrer_email(email):
