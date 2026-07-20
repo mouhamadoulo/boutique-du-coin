@@ -43,5 +43,5 @@ def remise_anniversaire(total, anniversaire):
 def total_commande(panier, points=0, anniversaire=False):
     """Montant final : articles - remises + frais de port."""
     t = total_articles(panier)
-    r = remise_fidelite(t, points) + remise_anniversaire(t, anniversaire)
+    r = min(remise_fidelite(t, points) + remise_anniversaire(t, anniversaire), t * PLAFOND_REMISE)
     return t - r + frais_de_port(t)
