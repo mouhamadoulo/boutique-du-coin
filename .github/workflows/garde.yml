@@ -13,18 +13,23 @@ on: [push, pull_request]
 # Le poste de travail : ce que le robot fait, etape par etape.
 jobs:
   tests:
-    runs-on: ubuntu-latest              # la machine louee par GitHub (Linux)
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
     steps:
       - name: Recuperer le code
-        uses: actions/checkout@v4       # il clone le repo sur sa machine
+        uses: actions/checkout@v4
 
-      - name: Installer Python
+      - name: Installer Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python-version }}
 
       - name: Installer pytest
         run: pip install pytest
 
       - name: Lancer les tests
-        run: python -m pytest -v        # rouge si UN test echoue
+        run: python -m pytest -v
