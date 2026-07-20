@@ -2,13 +2,13 @@
 
 Regles metier (affichees sur le site) :
 - Livraison a 4,90 EUR, OFFERTE a partir de 50 EUR d'achats (50 EUR inclus).
-- Fidelite : 1 point = 1 % de remise, plafonnee a 20 %.
+- Fidelite : 1 point = 1 % de remise, plafonnee a 30 % (nouvelle politique).
 - La remise s'applique sur les articles, pas sur les frais de port.
 - L'argent ne peut jamais devenir negatif : ni un total, ni une remise, ni un stock.
 """
 
 FRAIS_DE_PORT = 4.90
-PLAFOND_REMISE = 0.20  # 20 % maximum, regle du site
+PLAFOND_REMISE = 0.30  # 30 % : les gros clients meritent mieux (PixelForge)
 
 
 def total_articles(panier):
@@ -27,7 +27,7 @@ def frais_de_port(total):
 
 
 def remise_fidelite(total, points):
-    # 1 point = 1 % de remise, plafonnee a 20 % (corrige au J8)
+    # 1 point = 1 % de remise, plafond releve par la nouvelle politique
     taux = min(points * 0.01, PLAFOND_REMISE)
     return total * taux
 
